@@ -41,13 +41,73 @@
  *
  *     Schachnosa Viertbauer - 2026-04-14
  *******************************************************/
-let sumExpenses = 0; //Use this variable to keep the sum up to date.
+let sumExpenses = 0.0; //Use this variable to keep the sum up to date.
+
+const forms = document.querySelectorAll("form");
+
+forms.forEach(form => {
+    form.addEventListener("submit", submitForm)
+})
 
 function submitForm(e){
+    e.preventDefault();
+    const data = new FormData(e.target)
+
+    const expense = data.get("expense");
+    const amount= data.get("amount");
+    const date = data.get("date");
+
+    if (isEmpty(data) && (amount>=0.001) && (expense.length>=3))
+    {
+        sumExpenses += amount;
+        logData(date,amount,expense);
+        e.target.reset();
+    } else {
+        console.log("not valid");
+        console.log(!isEmpty(data));
+        console.log(!isEmpty((amount>=0.001)));
+        console.log(expense.length>=3);
+    }
+
     //TODO: Prevent the default behavior of the submit button.
     //TODO: Validate the form. If everything is fine, add the expense to the tracker and reset the form.
 }
 
+
+function logData(date,amount,expense){
+    const table = document.getElementById("expenses");
+    const tbody = table.querySelector("tbody");
+    const euro_amount = formatEuro(Number(amount));
+
+    const row = document.createElement("tr");
+
+    const data_td = document.createElement("td");
+    data_td.textContent = date;
+
+    const amount_td = document.createElement("td");
+    amount_td.textContent = euro_amount;
+
+    const expense_td = document.createElement("td");
+    expense_td.textContent = expense;
+
+    const delete_td = document.createElement("td");
+    const btn = document.createElement("button");
+    btn.textContent = "X";
+    btn.className = "delete-btn";
+
+    btn.addEventListener("click", () => {
+        row.remove();
+    });
+    delete_td.appendChild(btn);
+
+    row.appendChild(data_td);
+    row.appendChild(amount_td);
+    row.appendChild(expense_td);
+    row.appendChild(delete_td);
+    tbody.appendChild(row);
+
+    document.getElementById("expenseSum").textContent = formatEuro(sumExpenses);
+}
 
 /*****************************
  * DO NOT CHANGE CODE BELOW.
