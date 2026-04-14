@@ -54,7 +54,7 @@ function submitForm(e){
     const data = new FormData(e.target)
 
     const expense = data.get("expense");
-    const amount= data.get("amount");
+    const amount= Number(data.get("amount"));
     const date = data.get("date");
 
     if (isEmpty(data) && (amount>=0.001) && (expense.length>=3))
@@ -77,7 +77,7 @@ function submitForm(e){
 function logData(date,amount,expense){
     const table = document.getElementById("expenses");
     const tbody = table.querySelector("tbody");
-    const euro_amount = formatEuro(Number(amount));
+    const euro_amount = formatEuro(amount);
 
     const row = document.createElement("tr");
 
